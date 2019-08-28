@@ -15,7 +15,7 @@ cat <<'EOT'
 :global mcdPreviousIP;
 
 :local mcdCurrentIP
-:set mcdCurrentIP ([/tool fetch url="https://api.ipify.org/" output=user as-value]->"data")
+:set mcdCurrentIP [/ip cloud get public-address]
 
 :if ($mcdCurrentIP != $mcdPreviousIP) do={
   :log info "mcd: new IP $mcdCurrentIP (was $mcdPreviousIP)"
