@@ -1,0 +1,42 @@
+#!/bin/bash
+
+HOST=api.cloudflare.com
+
+function dns_ids() {
+  curl -s "https://$HOST/client/v4/zones/$ZONE_ID/dns_records" \
+    -H "Accept: application/json" \
+    -H "Authorization: Bearer $TOKEN" \
+    | jq -r ".result[] | select(.name == (\"*.$DOMAIN\", \"$DOMAIN\")) | .id + \":\" + .name"
+}
+
+DNS_IDS=`dns_ids`
+
+cat <<'EOT'
+:global mcdPreviousIP;
+
+:local mcdCurrentIP
+:set mcdCurrentIP ([/tool fetch url="https://api.ipify.org/" output=user as-value]->"data")
+
+:if ($mcdCurrentIP != $mcdPreviousIP) do={
+  :log info "mcd: new IP $mcdCurrentIP (was $mcdPreviousIP)"
+  :set mcdPreviousIP $mcdCurrentIP
+EOT
+
+for line in $DNS_IDS
+do
+  id=${line%:*}
+  name=${line#*:}
+
+  cat <<EOT
+  /tool fetch mode=https \\
+    http-method=put \\
+    url="https://$HOST/client/v4/zones/$ZONE_ID/dns_records/$id" \\
+    http-header-field="content-type: application/json,Authorization: Bearer $TOKEN" \\
+    http-data="{\"type\":\"A\",\"name\":\"$name\",\"content\":\"\$mcdCurrentIP\"}" \\
+    output=none
+EOT
+done
+
+cat <<EOT
+}
+EOT
