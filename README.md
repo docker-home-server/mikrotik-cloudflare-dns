@@ -28,7 +28,7 @@ variables:
 * `ZONE_ID` - the Zone ID, found on the Cloudflare Overview page
 for the top-level domain containing the domain records.
 
-I recommend [direnv](https://direnv.net/) to set these variables when you
+I recommend using [direnv](https://direnv.net/) to set these variables when you
 change to this directory.
 
 ### API Token
