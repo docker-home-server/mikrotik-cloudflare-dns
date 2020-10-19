@@ -2,6 +2,12 @@
 
 HOST=api.cloudflare.com
 
+if [ -z "$TOKEN" ]
+then
+  echo TOKEN is not set. Cannot continue.
+  exit 2
+fi
+
 function dns_ids() {
   curl -s "https://$HOST/client/v4/zones/$ZONE_ID/dns_records" \
     -H "Accept: application/json" \
