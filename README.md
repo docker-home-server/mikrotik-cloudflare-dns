@@ -59,7 +59,8 @@ The value of `TOKEN` will be used to authenticate the API requests.
 `gen-script` will output the script to be loaded on to your
 router by following these steps:
 
-1. Log in to the Mikrotik web user interface on your router.
+1. Log in to the Mikrotik web user interface on your router,
+or use WinBox if you are familiar with it.
 2. Choose 'System' > 'Scripts'.
 3. Click 'Add New'.
 4. Set an appropriate name (e.g. `mcd`).
@@ -74,11 +75,11 @@ every few minutes:
 2. Click 'Add New'.
 3. Set an appropriate name (e.g. `mcd`).
 4. Set an interval, such as `00:15:00` for every 15 minutes.
-5. Under 'On Event' enter the name you gave to the script when you created it (step 4 above).
-6. Click 'Apply'.
+5. Select only the 'read', 'write', 'policy', and 'test' policies, as above.
+6. Under 'On Event' enter the name you gave to the script when you created it
+(step 4 above).
+7. Click 'Apply'.
 
 The script should now run every 15 minutes, updating the
 Cloudflare DNS records when the router's public IP address
 has changed.
-
-
